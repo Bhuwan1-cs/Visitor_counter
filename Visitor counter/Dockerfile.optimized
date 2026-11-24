@@ -1,0 +1,42 @@
+# Stage 1: Build & Dependencies compilation
+FROM python:3.10-slim AS builder
+
+WORKDIR /build
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# Stage 2: Minimal Production Runtime
+FROM python:3.10-slim AS runtime
+
+# Security hardening: Create non-root system user
+RUN groupadd -g 10001 appgroup && \
+    useradd -u 10001 -g appgroup -s /sbin/nologin -M appuser
+
+WORKDIR /app
+
+# Copy only installed libraries from builder stage
+COPY --from=builder /install /usr/local
+COPY app.py .
+
+# Change ownership and switch to non-root
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+EXPOSE 5000
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    REDIS_HOST=redis \
+    REDIS_PORT=6379 \
+    STUDENT_NAME="Bhuwan Kumar" \
+    STUDENT_ROLL="2410030358"
+
+HEALTHCHECK --interval=15s --timeout=3s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')" || exit 1
+
+CMD ["python", "app.py"]

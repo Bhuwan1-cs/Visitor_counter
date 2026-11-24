@@ -1,0 +1,13 @@
+Project Title: Deploy a Visitor Counter Web App (Flask + Redis) on Docker and Kubernetes
+Student Name: Bhuwan Kumar
+Roll Number: 2410030358
+Course: Cloud Computing & Distributed Systems
+Submission Date: November 2026
+
+GitHub Repository URL:
+https://github.com/bhuwankumar-2410030358/cloud-visitor-counter-k8s
+
+Submission Notes:
+- Full source code, Dockerfiles, Kubernetes manifests, and test scripts are available in the repository.
+- Hybrid cloud disaster recovery failover was simulated locally using two Minikube cluster profiles (minikube -p primary and minikube -p secondary).
+- All verification logs, architecture diagrams, and cost analysis reports are included.

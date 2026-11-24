@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: visitor-config
+  labels:
+    app: visitor-counter
+data:
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  STUDENT_NAME: "Bhuwan Kumar"
+  STUDENT_ROLL: "2410030358"
